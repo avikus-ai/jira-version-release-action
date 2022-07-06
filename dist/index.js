@@ -6063,14 +6063,13 @@ const projectKey = core.getInput("project_key");
 const jira_token = core.getInput("jira_token");
 const domain_name = core.getInput("domain_name");
 
-const versionsResponse = fetch(`https://${domain_name}.atlassian.net/rest/api/3/${projectKey}/versions`, {
+const versions = fetch(`https://${domain_name}.atlassian.net/rest/api/3/${projectKey}/versions`, {
   headers: {
     Authorization: `Basic ${Buffer.from(`${jira_token}`).toString("base64")}`,
     Accept: "application/json",
   },
-});
+}).then((res) => res.json());
 
-const versions = versionsResponse.json();
 const target = versions.find((item) => item.name === versionName);
 
 const bodyData = `{
