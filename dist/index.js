@@ -6063,34 +6063,45 @@ const projectKey = core.getInput("project_key");
 const jira_token = core.getInput("jira_token");
 const domain_name = core.getInput("domain_name");
 
-const versions = fetch(`https://${domain_name}.atlassian.net/rest/api/3/${projectKey}/versions`, {
-  headers: {
-    Authorization: `Basic ${Buffer.from(`${jira_token}`).toString("base64")}`,
-    Accept: "application/json",
-  },
-}).then((res) => res.json());
+async function getVersions() {
+  const versions = await fetch(`https://${domain_name}.atlassian.net/rest/api/3/${projectKey}/versions`, {
+    headers: {
+      Authorization: `Basic ${Buffer.from(`${jira_token}`).toString("base64")}`,
+      Accept: "application/json",
+    },
+  }).then((res) => res.json());
 
+  return versions;
+}
+
+const versions = getVersions();
 console.log(versions);
 
 if (!Array.isArray(versions)) {
   throw new Error("typeof versions is not Array");
 }
-const target = versions.find((item) => item.name === versionName);
 
-const bodyData = `{
-  "releaseDate": ${new Date()},
-  "released": true
-}`;
-const updateResponse = fetch(`https://${domain_name}.atlassian.net/rest/api/3/versions/${target.id}`, {
-  headers: {
-    Authorization: `Basic ${Buffer.from(`${jira_token}`).toString("base64")}`,
-    Accept: "application/json",
-    "Content-type": "application/json",
-  },
-  body: bodyData,
-});
+async function updateVersion(versions) {
+  const target = versions.find((item) => item.name === versionName);
 
-core.setOutput("status", updateResponse.status);
+  const bodyData = `{
+    "releaseDate": ${new Date()},
+    "released": true
+  }`;
+
+  const updateResponse = await fetch(`https://${domain_name}.atlassian.net/rest/api/3/versions/${target.id}`, {
+    headers: {
+      Authorization: `Basic ${Buffer.from(`${jira_token}`).toString("base64")}`,
+      Accept: "application/json",
+      "Content-type": "application/json",
+    },
+    body: bodyData,
+  });
+
+  core.setOutput("status", updateResponse.status);
+}
+
+updateVersion(versions);
 
 })();
 
