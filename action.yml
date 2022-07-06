@@ -14,6 +14,9 @@ inputs:
   domain_name:
     description: "your domain"
     required: true
+  release_date:
+    description: "release date"
+    required: false
 
 outputs:
   status:
