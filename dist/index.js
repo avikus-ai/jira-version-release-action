@@ -6064,18 +6064,22 @@ const jira_token = core.getInput("jira_token");
 const domain_name = core.getInput("domain_name");
 
 async function getVersions() {
-  const versions = await fetch(`https://${domain_name}.atlassian.net/rest/api/3/${projectKey}/versions`, {
+  const response = await fetch(`https://${domain_name}.atlassian.net/rest/api/3/${projectKey}/versions`, {
     headers: {
       Authorization: `Basic ${Buffer.from(`${jira_token}`).toString("base64")}`,
       Accept: "application/json",
     },
-  }).then((res) => res.json());
+  });
+
+  console.log("response", response);
+  const versions = await response.json();
+  console.log("versions", versions);
 
   return versions;
 }
 
 const versions = getVersions();
-console.log(versions);
+console.log("versions1", versions);
 
 if (!Array.isArray(versions)) {
   throw new Error("typeof versions is not Array");
