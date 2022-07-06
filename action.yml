@@ -1,0 +1,24 @@
+name: "jira release action"
+description: "release jira version by updating version"
+
+inputs:
+  version_name:
+    description: "jira version name"
+    required: true
+  project_key:
+    description: "project key"
+    required: true
+  jira_token:
+    description: "jira auth token"
+    required: true
+  domain_name:
+    description: "your domain"
+    required: true
+
+outputs:
+  status:
+    description: "update status"
+
+runs:
+  using: "node16"
+  main: "dist/index.js"
