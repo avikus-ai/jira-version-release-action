@@ -6070,6 +6070,9 @@ const versions = fetch(`https://${domain_name}.atlassian.net/rest/api/3/${projec
   },
 }).then((res) => res.json());
 
+if (!Array.isArray(versions)) {
+  throw new Error("typeof versions is not Array");
+}
 const target = versions.find((item) => item.name === versionName);
 
 const bodyData = `{
