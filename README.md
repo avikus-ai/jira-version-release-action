@@ -1,4 +1,5 @@
 # JIRA version release action
+[![GitHub version](https://badge.fury.io/gh/avikus-ai%2Fjira-version-release-action.svg)](https://badge.fury.io/gh/avikus-ai%2Fjira-version-release-action) 
 
 Github Action for JIRA version release.
 
